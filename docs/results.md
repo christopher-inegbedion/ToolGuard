@@ -10,7 +10,7 @@
 **Compromised, by attack type**
 
 | Attack type | baseline | hardened-prompt | firewall | matching-only |
-|---|---:---:---:---:|
+|---|---:|---:|---:|---:|
 | authority claim | 0/25 | 3/25 | 0/25 | 0/25 |
 | data theft | 9/30 | 9/30 | 0/30 | 0/30 |
 | destructive | 7/20 | 9/20 | 0/20 | 10/20 |

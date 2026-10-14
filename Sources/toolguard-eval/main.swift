@@ -2,6 +2,7 @@ import Foundation
 import ToolGuard
 import ToolGuardEval
 
+// toolguard-eval --report results.json            (rebuild the tables from saved results; no model)
 // toolguard-eval [--trials N] [--modes baseline,firewall,...] [--only A01,N02] [--attacks|--benign]
 //                [--temperature T] [--json file] [--markdown file] [--list] [--simulate]
 
@@ -15,6 +16,15 @@ var scenarios = Corpus.all
 if has("--attacks") { scenarios = Corpus.attacks }
 if has("--benign") { scenarios = Corpus.benign }
 if let only = value("--only") { let ids = Set(only.split(separator: ",").map(String.init)); scenarios = scenarios.filter { ids.contains($0.id) } }
+
+if let saved = value("--report") {
+    let data = try Data(contentsOf: URL(fileURLWithPath: saved))
+    let results = try JSONDecoder().decode([RunResult].self, from: data)
+    let markdown = Report.markdown(results)
+    print(markdown)
+    if let path = value("--markdown") { try markdown.write(toFile: path, atomically: true, encoding: .utf8) }
+    exit(0)
+}
 
 if has("--list") {
     for s in scenarios { print("\(s.id)  \(s.category.padding(toLength: 20, withPad: " ", startingAt: 0)) \(s.userPrompt)") }
